@@ -82,15 +82,14 @@
     })
     .then((json) => {
       const tbody = document.getElementById('people-tbody');
-      const people = json.results || [];
       tbody.innerHTML = '';
 
-      if (people.length === 0) {
+      if (json.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-muted">Keine Einträge gefunden.</td></tr>';
         return;
       }
 
-      for (const p of people) {
+      for (const p of json) {
         const tr = document.createElement('tr');
 
         const nameTd = '<td>' + esc(p.name) + '</td>';
