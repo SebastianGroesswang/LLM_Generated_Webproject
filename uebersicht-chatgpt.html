@@ -35,6 +35,57 @@
     </div>
 </nav>
 
+<div class="container py-5">
+    <h1>Übersicht Copilot</h1>
+
+    <table class="table table-striped table-hover mt-4">
+        <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Height</th>
+            <th>Birth Year</th>
+            <th>Homeworld</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody id="people-table-body">
+        <!-- Inhalte werden per JavaScript eingefügt -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    fetch("https://swapi.info/api/people")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById("people-table-body");
+
+            data.forEach(person => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${person.name}</td>
+                    <td>${person.height}</td>
+                    <td>${person.birth_year}</td>
+                    <td>
+                        <a href="${person.homeworld}" target="_blank">
+                            Homeworld
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-primary disabled">
+                            Details
+                        </a>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden der Daten:", error);
+        });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 
