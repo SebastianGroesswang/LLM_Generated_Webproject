@@ -62,10 +62,11 @@
               </div>
             </div>
 
-            <div>
-              <h2 class="h6">Felder</h2>
-              <dl id="fields" class="row gx-3 gy-2"></dl>
+            <!-- Neues Grid für gruppierte Felder -->
+            <div id="groups" class="row g-3">
+              <!-- Inhalte werden per JS eingefügt -->
             </div>
+
           </div>
         </div>
       </div>
@@ -74,21 +75,38 @@
 
   <script>
     // Einfaches Escaping
-    function esc(s){ return String(s===null||s===undefined?'':s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+    function esc(s){ return String(s===null||s===undefined?'':s)
+      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+      .replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
 
-    // Hilfsfunktion: Rendert Werte (Strings, Arrays, Objekte)
-    function renderValue(v){
-      if (Array.isArray(v)){
-        if(v.length===0) return '<span class="text-muted">—</span>';
-        const items = v.map(item => {
-          if(typeof item === 'string' && item.startsWith('http')) return '<li><a href="'+esc(item)+'" target="_blank" rel="noopener">'+esc(item)+'</a></li>';
-          return '<li>'+esc(typeof item === 'object' ? JSON.stringify(item) : item) +'</li>';
-        }).join('');
-        return '<ul class="mb-0">'+items+'</ul>';
-      }
-      if (v && typeof v === 'object') return '<pre class="mb-0 bg-white p-2 border rounded" style="white-space:pre-wrap">'+esc(JSON.stringify(v, null, 2))+'</pre>';
-      if (typeof v === 'string' && v.startsWith('http')) return '<a href="'+esc(v)+'" target="_blank" rel="noopener">'+esc(v)+'</a>';
-      return '<span>'+esc(v)+'</span>';
+    // Hilfsfunktionen
+    function lastIdFromUrl(url){
+      try{
+        const m = String(url).match(/\/(\d+)\/?$/);
+        return m ? m[1] : null;
+      }catch(e){return null;}
+    }
+
+    const filmMap = {
+      "1":"A New Hope",
+      "2":"The Empire Strikes Back",
+      "3":"Return of the Jedi",
+      "4":"The Phantom Menace",
+      "5":"Attack of the Clones",
+      "6":"Revenge of the Sith"
+    };
+
+    function linkListFromUrls(urls){
+      if(!Array.isArray(urls) || urls.length===0) return '<span class="text-muted">—</span>';
+      return '<ul class="mb-0">' + urls.map(u =>
+        '<li><a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u) + '</a></li>'
+      ).join('') + '</ul>';
+    }
+
+    function makeCard(colClass, title, innerHTML){
+      return '<div class="' + colClass + '"><div class="card h-100"><div class="card-body">' +
+             '<h3 class="h6 mb-2">' + esc(title) + '</h3>' + innerHTML +
+             '</div></div></div>';
     }
 
     // Lese id aus URL
@@ -97,7 +115,7 @@
     const statusEl = document.getElementById('status');
     const detailsEl = document.getElementById('details');
     const rawEl = document.getElementById('raw');
-    const fieldsEl = document.getElementById('fields');
+    const groupsEl = document.getElementById('groups');
     const titleEl = document.getElementById('title');
     titleEl.textContent = 'Person — Detail (id=' + esc(id) + ')';
 
@@ -108,21 +126,62 @@
         return res.json();
       })
       .then(json => {
-        // raw JSON
+        // Roh-JSON
         rawEl.textContent = JSON.stringify(json, null, 2);
 
-        // Felder darstellen
-        fieldsEl.innerHTML = '';
-        Object.entries(json).forEach(([k,v]) => {
-          const dt = document.createElement('dt');
-          dt.className = 'col-sm-3 text-muted';
-          dt.textContent = k;
-          const dd = document.createElement('dd');
-          dd.className = 'col-sm-9';
-          dd.innerHTML = renderValue(v);
-          fieldsEl.appendChild(dt);
-          fieldsEl.appendChild(dd);
-        });
+        // Gruppierung: Persönliche Daten
+        const name = json.name || '—';
+        const birth = json.birth_year || '—';
+        const gender = json.gender || '—';
+        const speciesArr = Array.isArray(json.species) ? json.species : [];
+        const speciesHtml = speciesArr.length ? speciesArr.map(u=>'<li><a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(u)+'</a></li>').join('') : '';
+
+        const personalInner = '<ul class="list-unstyled mb-0">' +
+          '<li><strong>Name: </strong> ' + esc(name) + '</li>' +
+          '<li><strong>Birth year: </strong> ' + esc(birth) + '</li>' +
+          '<li><strong>Gender: </strong> ' + esc(gender) + '</li>' +
+          (speciesArr.length ? '<li><strong>Species:</strong> <ul class="mb-0">' + speciesHtml + '</ul></li>' : '') +
+          '</ul>';
+
+        // Aussehen
+        const appearanceInner = '<ul class="list-unstyled mb-0">' +
+          '<li><strong>Height: </strong> ' + esc(json.height || '—') + '</li>' +
+          '<li><strong>Mass: </strong> ' + esc(json.mass || '—') + '</li>' +
+          '<li><strong>Hair color: </strong> ' + esc(json.hair_color || '—') + '</li>' +
+          '<li><strong>Skin color: </strong> ' + esc(json.skin_color || '—') + '</li>' +
+          '<li><strong>Eye color: </strong> ' + esc(json.eye_color || '—') + '</li>' +
+          '</ul>';
+
+        // Filme: extrahiere ID und ersetze durch Titel
+        const films = Array.isArray(json.films) ? json.films : [];
+        const filmsHtml = films.length
+          ? '<ul class="mb-0">' + films.map(u => {
+              const fid = lastIdFromUrl(u) || '?';
+              const title = filmMap[fid] || ('Film #' + fid);
+              return '<li>' + esc(title) + '</li>';
+            }).join('') + '</ul>'
+          : '<span class="text-muted">—</span>';
+
+        // Fahrzeuge & Raumschiffe: Summe + collapse mit Links
+        const vehicles = Array.isArray(json.vehicles) ? json.vehicles : [];
+        const starships = Array.isArray(json.starships) ? json.starships : [];
+        const totalVS = vehicles.length + starships.length;
+        const vsCollapseId = 'vsCollapse_' + esc(id);
+        const combinedLinks = vehicles.concat(starships);
+        const combinedListHtml = combinedLinks.length
+          ? '<ul class="mb-0">' + combinedLinks.map(u => '<li><a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(u)+'</a></li>').join('') + '</ul>'
+          : '<span class="text-muted">—</span>';
+
+        const vsInner = '<p class="mb-2"><strong>Summe:</strong> ' + esc(String(totalVS)) + '</p>' +
+          '<button class="btn btn-sm btn-outline-secondary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#' + vsCollapseId + '" aria-expanded="false" aria-controls="' + vsCollapseId + '">Auflisten</button>' +
+          '<div class="collapse" id="' + vsCollapseId + '">' + combinedListHtml + '</div>';
+
+        // Build grid: 2 cols on md for personal & appearance, films full width, vehicles col
+        groupsEl.innerHTML =
+          makeCard('col-12 col-md-6', 'Persönliche Daten', personalInner) +
+          makeCard('col-12 col-md-6', 'Aussehen', appearanceInner) +
+          makeCard('col-12', 'Filme', filmsHtml) +
+          makeCard('col-12 col-md-6', 'Raumschiffe und Fahrzeuge', vsInner);
 
         statusEl.classList.add('d-none');
         detailsEl.classList.remove('d-none');
