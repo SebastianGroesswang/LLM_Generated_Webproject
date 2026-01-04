@@ -119,8 +119,6 @@
     const detailsEl = document.getElementById('details');
     const rawEl = document.getElementById('raw');
     const groupsEl = document.getElementById('groups');
-    const titleEl = document.getElementById('title');
-    titleEl.textContent = 'Person — Detail (id=' + esc(id) + ')';
 
     // Fetch mit then/catch
     fetch('https://swapi.info/api/people/' + encodeURIComponent(id))
