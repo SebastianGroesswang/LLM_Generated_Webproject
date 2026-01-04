@@ -34,8 +34,8 @@
   <main class="container py-4">
     <div class="card mb-3">
       <div class="card-body">
-        <h1 class="h4 mb-2" id="title">Person — Detail</h1>
-        <p class="text-muted" id="subtitle">Lädt die Daten anhand der id in der URL (z.B. detail.html?id=4)</p>
+        <!-- Nur Überschrift, keine Beschreibung -->
+        <h1 class="h4 mb-0" id="title">Person — Detail</h1>
       </div>
     </div>
 
@@ -47,25 +47,28 @@
           </div>
 
           <div id="details" class="d-none">
-            <div class="mb-3">
-              <h2 class="h6 d-flex align-items-center justify-content-between">
-                Rohdaten (JSON)
-                <button class="btn btn-sm btn-outline-secondary" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#rawCollapse"
-                        aria-expanded="false" aria-controls="rawCollapse">
-                  Rohdaten anzeigen
-                </button>
-              </h2>
-
-              <div class="collapse mt-2" id="rawCollapse">
-                <pre id="raw" class="bg-light p-3 rounded" style="max-height:300px;overflow:auto"></pre>
-              </div>
-            </div>
-
-            <!-- Neues Grid für gruppierte Felder -->
+            <!-- Grid mit Gruppenkarten -->
             <div id="groups" class="row g-3">
               <!-- Inhalte werden per JS eingefügt -->
             </div>
+
+            <!-- Rohdaten in eigener Card unterhalb der formatierten Daten -->
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <h2 class="h6 mb-0">Rohdaten (JSON)</h2>
+                  <button class="btn btn-sm btn-outline-secondary" type="button"
+                          data-bs-toggle="collapse" data-bs-target="#rawCollapse"
+                          aria-expanded="false" aria-controls="rawCollapse">
+                    Rohdaten anzeigen
+                  </button>
+                </div>
+                <div class="collapse mt-2" id="rawCollapse">
+                  <pre id="raw" class="bg-light p-3 rounded" style="max-height:300px;overflow:auto"></pre>
+                </div>
+              </div>
+            </div>
+            <!-- Ende Rohdaten-Card -->
 
           </div>
         </div>
