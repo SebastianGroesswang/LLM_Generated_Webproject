@@ -14,6 +14,35 @@
   </style>
 </head>
 <body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <!-- Platz für kleines Star Wars Logo (Datei optional: ./assets/star-wars-logo-small.png) -->
+        <img src="./assets/star-wars-logo-small.png" alt="Star Wars" width="36" height="36" class="me-2" onerror="this.style.display='none'">
+        <span class="fw-semibold">Star Wars</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="uebersicht-copilot.html">Übersicht Copilot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="uebersicht-chatgpt.html">Übersicht ChatGPT</a>
+          </li>
+          <li class="nav-item">
+            <!-- Hervorgehobener Link -->
+            <a class="nav-link btn btn-primary text-white ms-lg-3 mt-2 mt-lg-0" href="erschaffe-deinen-eigenen-character.html">Erschaffe deinen eigenen Character</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <div class="container py-4">
     <!-- Titelabschnitt -->
     <header class="card shadow-sm mb-4">
