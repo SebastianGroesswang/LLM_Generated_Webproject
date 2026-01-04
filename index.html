@@ -1,80 +1,87 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Star Wars Character Selektor</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Star Wars Character Selektor</title>
 
-  <!-- Lokale, installierte Bootstrap CSS -->
-  <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
 
-  <style>
-    /* Minimale, projektweite Anpassung: dezenter grauer Hintergrund */
-    body { background-color: #f2f3f5; }
-  </style>
+    <style>
+        /* Minimale, projektweite Anpassung: dezenter grauer Hintergrund */
+        body {
+            background-color: #f2f3f5;
+        }
+    </style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="index.html">
-        <!-- Platz für kleines Star Wars Logo (Datei optional: ./assets/star-wars-logo-small.png) -->
-        <img src="./assets/star-wars-logo-small.png" alt="Star Wars" width="36" height="36" class="me-2" onerror="this.style.display='none'">
-        <span class="fw-semibold">Star Wars</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <!-- Platz für kleines Star Wars Logo (Datei optional: ./assets/star-wars-logo-small.png) -->
+            <img src="./assets/star-wars-logo-small.png" alt="Star Wars" width="36" height="36" class="me-2"
+                 onerror="this.style.display='none'">
+            <span class="fw-semibold">Star Wars</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center">
-          <li class="nav-item">
-            <a class="nav-link" href="uebersicht-copilot.html">Übersicht Copilot</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="uebersicht-chatgpt.html">Übersicht ChatGPT</a>
-          </li>
-          <li class="nav-item">
-            <!-- Hervorgehobener Link -->
-            <a class="nav-link btn btn-outline-primary text-gray ms-lg-3 mt-2 mt-lg-0" href="erschaffe-deinen-eigenen-character.html">Erschaffe deinen eigenen Character</a>
-          </li>
-        </ul>
-      </div>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="uebersicht-copilot.html">Übersicht Copilot</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="uebersicht-chatgpt.html">Übersicht ChatGPT</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Hervorgehobener Link -->
+                    <a class="nav-link btn btn-outline-primary text-gray ms-lg-3 mt-2 mt-lg-0"
+                       href="erschaffe-deinen-eigenen-character.html">Erschaffe deinen eigenen Character</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </nav>
+</nav>
 
-  <div class="container py-4">
+<div class="container py-4">
     <!-- Titelabschnitt -->
     <header class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h1 class="card-title display-6 mb-2">Star Wars Character Selektor</h1>
-        <p class="text-muted mb-0">Kurze Einführung und Zweck der Seite (Platzhalter).</p>
-      </div>
+        <div class="card-body">
+            <h1 class="card-title display-6 mb-2">Star Wars Character Selektor</h1>
+            <p class="text-muted mb-0">Kurze Einführung und Zweck der Seite (Platzhalter).</p>
+        </div>
     </header>
 
     <main>
-      <!-- Beschreibung der Seite -->
-      <section class="card mb-3">
-        <div class="card-body">
-          <h2 class="h5">Beschreibung der Seite</h2>
-          <p class="text-muted mb-0">Hier steht eine allgemeine Beschreibung dieser Seite. Inhalt ist aktuell als Platzhalter vorgesehen und kann später durch echte Informationen ersetzt werden.</p>
-        </div>
-      </section>
+        <!-- Beschreibung der Seite -->
+        <section class="card mb-3">
+            <div class="card-body">
+                <h2 class="h5">Beschreibung der Seite</h2>
+                <p class="text-muted mb-0">Hier steht eine allgemeine Beschreibung dieser Seite. Inhalt ist aktuell als
+                    Platzhalter vorgesehen und kann später durch echte Informationen ersetzt werden.</p>
+            </div>
+        </section>
 
-      <!-- Verwendung von LLMs -->
-      <section class="card">
-        <div class="card-body">
-          <h2 class="h5">Verwendung von LLMs in diesem Projekt</h2>
-          <p class="text-muted mb-0">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-        </div>
-      </section>
+        <!-- Verwendung von LLMs -->
+        <section class="card">
+            <div class="card-body">
+                <h2 class="h5">Verwendung von LLMs in diesem Projekt</h2>
+                <p class="text-muted mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat.
+                </p>
+            </div>
+        </section>
     </main>
-  </div>
+</div>
 
-  <!-- Lokales Bootstrap JS (Bundle mit Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
