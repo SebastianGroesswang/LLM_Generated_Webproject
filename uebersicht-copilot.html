@@ -36,7 +36,70 @@
 
 <div class="container py-5">
     <h1>Übersicht Copilot</h1>
+
+    <!-- Neue Sektion: Tabelle mit API-Daten -->
+    <section class="card mt-4">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Personen (SWAPI)</h2>
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Height</th>
+                <th>Birth Year</th>
+                <th>Homeworld</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="people-tbody">
+              <!-- Ladezustand -->
+              <tr>
+                <td colspan="5" class="text-center py-4">
+                  <div class="spinner-border" role="status"><span class="visually-hidden">Lädt...</span></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 </div>
+
+<script>
+  // Minimaler XSS-Schutz
+  function esc(s){ return String(s===null||s===undefined?'':s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+
+  (async function loadPeople(){
+    const tbody = document.getElementById('people-tbody');
+    try{
+      const res = await fetch('https://swapi.info/api/people');
+      if(!res.ok) throw new Error('Netzwerkfehler: ' + res.status);
+      const json = await res.json();
+      const people = json.results || [];
+      tbody.innerHTML = '';
+      if(people.length === 0){
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted">Keine Einträge gefunden.</td></tr>';
+        return;
+      }
+      for(const p of people){
+        const tr = document.createElement('tr');
+
+        const nameTd = '<td>' + esc(p.name) + '</td>';
+        const heightTd = '<td>' + esc(p.height) + '</td>';
+        const birthTd = '<td>' + esc(p.birth_year) + '</td>';
+        const homeworldHref = p.homeworld ? esc(p.homeworld) : '#';
+        const homeworldTd = '<td>' + (p.homeworld ? '<a href="' + homeworldHref + '" target="_blank" rel="noopener">Homeworld</a>' : '<span class="text-muted">—</span>') + '</td>';
+        const detailsTd = '<td><a class="btn btn-sm btn-outline-secondary disabled" href="#" role="button" aria-disabled="true">Details</a></td>';
+
+        tr.innerHTML = nameTd + heightTd + birthTd + homeworldTd + detailsTd;
+        tbody.appendChild(tr);
+      }
+    }catch(err){
+      tbody.innerHTML = '<tr><td colspan="5" class="text-danger">Fehler beim Laden: ' + esc(err.message) + '</td></tr>';
+    }
+  })();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoY9uHq6QvZ6H2QZl6rZ9E+0i1w0nU3zV9zzTtmI3Uksd+" crossorigin="anonymous"></script>
