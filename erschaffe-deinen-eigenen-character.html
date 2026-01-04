@@ -79,9 +79,12 @@
             </select>
           </div>
 
+          <!-- Homeworld: ersetzt input durch select, wird via JS gefüllt -->
           <div class="col-12">
-            <label class="form-label">Homeworld (URL)</label>
-            <input type="url" class="form-control" id="homeworld" placeholder="https://swapi.info/api/planets/1">
+            <label class="form-label">Homeworld</label>
+            <select class="form-select" id="homeworld" aria-label="Homeworld wählen">
+              <option value="">Lade Planeten…</option>
+            </select>
           </div>
 
           <div class="col-12 col-md-6">
@@ -123,10 +126,41 @@
   </div>
 </div>
 
-<!-- Script: Formhandling -->
+<!-- Script: Formhandling + Planeten-Select befüllen -->
 <script>
   function esc(s){ return String(s===null||s===undefined?'':s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
   function splitLinesToArray(text){ return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean); }
+
+  // Planeten laden und Select füllen
+  (function loadPlanets(){
+    const sel = document.getElementById('homeworld');
+    if(!sel) return;
+    // Ziel: fetch dann json als Array verarbeiten
+    fetch("https://swapi.info/api/planets")
+      .then(res => {
+        if(!res.ok) throw new Error('Netzwerkfehler beim Laden der Planeten: ' + res.status);
+        return res.json();
+      })
+      .then(json => {
+        // API kann direkt ein Array oder ein Objekt mit results liefern
+        const planets = Array.isArray(json) ? json : (json.results || json);
+        if(!Array.isArray(planets) || planets.length === 0){
+          sel.innerHTML = '<option value="">Keine Planeten gefunden</option>';
+          return;
+        }
+        const opts = ['<option value="">-- auswählen --</option>'];
+        for(const p of planets){
+          const name = esc(p.name || p.title || 'unbekannt');
+          const url  = esc(p.url || '');
+          opts.push('<option value="' + url + '">' + name + '</option>');
+        }
+        sel.innerHTML = opts.join('');
+      })
+      .catch(err => {
+        console.error(err);
+        sel.innerHTML = '<option value="">Fehler beim Laden der Planeten</option>';
+      });
+  })();
 
   document.getElementById('charForm').addEventListener('submit', function(e){
     e.preventDefault();
@@ -141,7 +175,7 @@
     const eye_color = document.getElementById('eye_color').value;
     const birth_year = document.getElementById('birth_year').value.trim();
     const gender = document.getElementById('gender').value;
-    const homeworld = document.getElementById('homeworld').value.trim();
+    const homeworld = document.getElementById('homeworld').value.trim(); // hier kommt die URL
     const films = splitLinesToArray(document.getElementById('films').value);
     const species = splitLinesToArray(document.getElementById('species').value);
     const vehicles = splitLinesToArray(document.getElementById('vehicles').value);
