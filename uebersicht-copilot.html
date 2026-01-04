@@ -12,9 +12,33 @@
     }</style>
 </head>
 <body>
+  <!-- NAVBAR: Logo links (verweist auf index.html) und rechts Link zurück zur Home -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img src="./assets/star-wars-logo-small.png" alt="Star Wars" width="36" height="36" class="me-2" onerror="this.style.display='none'">
+        <span class="fw-semibold">Star Wars</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#copilotNav" aria-controls="copilotNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="copilotNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
 <div class="container py-5">
     <h1>Übersicht Copilot</h1>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoY9uHq6QvZ6H2QZl6rZ9E+0i1w0nU3zV9zzTtmI3Uksd+" crossorigin="anonymous"></script>
 </body>
 </html>
-
