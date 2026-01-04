@@ -13,8 +13,188 @@
 </head>
 <body>
 <div class="container py-5">
-    <h1>Erschaffe deinen eigenen Character</h1>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h1 class="h4 mb-0">Erschaffe deinen eigenen Character</h1>
+    </div>
+  </div>
+
+  <!-- Formularkarte -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <form id="charForm" novalidate>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <label class="form-label">Height (cm)</label>
+            <input type="number" class="form-control" id="height" min="0" inputmode="numeric" required>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <label class="form-label">Mass (kg)</label>
+            <input type="number" class="form-control" id="mass" min="0" inputmode="numeric" required>
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">Hair color</label>
+            <input type="text" class="form-control" id="hair_color">
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">Skin color</label>
+            <input type="text" class="form-control" id="skin_color">
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">Eye color</label>
+            <select class="form-select" id="eye_color">
+              <option value="">-- auswählen --</option>
+              <option>blue</option>
+              <option>brown</option>
+              <option>green</option>
+              <option>hazel</option>
+              <option>yellow</option>
+              <option>red</option>
+              <option>black</option>
+              <option>unknown</option>
+            </select>
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">Birth year</label>
+            <input type="text" class="form-control" id="birth_year" placeholder="z.B. 19BBY">
+          </div>
+
+          <div class="col-6 col-md-4">
+            <label class="form-label">Gender</label>
+            <select class="form-select" id="gender">
+              <option value="">-- auswählen --</option>
+              <option value="male">male</option>
+              <option value="female">female</option>
+              <option value="other">other</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Homeworld (URL)</label>
+            <input type="url" class="form-control" id="homeworld" placeholder="https://swapi.info/api/planets/1">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Films (eine URL pro Zeile)</label>
+            <textarea class="form-control" id="films" rows="4" placeholder="https://swapi.info/api/films/1"></textarea>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Species (eine URL pro Zeile)</label>
+            <textarea class="form-control" id="species" rows="4" placeholder="https://swapi.info/api/species/1"></textarea>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Vehicles (eine URL pro Zeile)</label>
+            <textarea class="form-control" id="vehicles" rows="3" placeholder="https://swapi.info/api/vehicles/14"></textarea>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Starships (eine URL pro Zeile)</label>
+            <textarea class="form-control" id="starships" rows="3" placeholder="https://swapi.info/api/starships/12"></textarea>
+          </div>
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Absenden</button>
+          <button type="reset" class="btn btn-outline-secondary">Zurücksetzen</button>
+          <div id="formAlert" class="ms-auto"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Preview-Card -->
+  <div class="card">
+    <div class="card-body">
+      <h2 class="h6">Erzeugtes JSON (Vorschau)</h2>
+      <pre id="jsonPreview" class="bg-light p-3 rounded" style="max-height:360px;overflow:auto">{} </pre>
+    </div>
+  </div>
 </div>
+
+<!-- Script: Formhandling -->
+<script>
+  function esc(s){ return String(s===null||s===undefined?'':s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+  function splitLinesToArray(text){ return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean); }
+
+  document.getElementById('charForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const alertEl = document.getElementById('formAlert');
+    alertEl.innerHTML = '';
+
+    const name = document.getElementById('name').value.trim();
+    const height = document.getElementById('height').value.trim();
+    const mass = document.getElementById('mass').value.trim();
+    const hair_color = document.getElementById('hair_color').value.trim();
+    const skin_color = document.getElementById('skin_color').value.trim();
+    const eye_color = document.getElementById('eye_color').value;
+    const birth_year = document.getElementById('birth_year').value.trim();
+    const gender = document.getElementById('gender').value;
+    const homeworld = document.getElementById('homeworld').value.trim();
+    const films = splitLinesToArray(document.getElementById('films').value);
+    const species = splitLinesToArray(document.getElementById('species').value);
+    const vehicles = splitLinesToArray(document.getElementById('vehicles').value);
+    const starships = splitLinesToArray(document.getElementById('starships').value);
+
+    const errors = [];
+    if(!name) errors.push('Name ist erforderlich.');
+    if(!height || !/^\d+$/.test(height)) errors.push('Height muss eine Zahl sein.');
+    if(!mass || !/^\d+$/.test(mass)) errors.push('Mass muss eine Zahl sein.');
+
+    if(errors.length){
+      alertEl.innerHTML = '<div class="alert alert-danger mb-0 p-2">' + esc(errors.join(' ')) + '</div>';
+      return;
+    }
+
+    const payload = {
+      name: name,
+      height: String(parseInt(height,10)),
+      mass: String(parseInt(mass,10)),
+      hair_color: hair_color || null,
+      skin_color: skin_color || null,
+      eye_color: eye_color || null,
+      birth_year: birth_year || null,
+      gender: gender || null,
+      homeworld: homeworld || null,
+      films: films,
+      species: species,
+      vehicles: vehicles,
+      starships: starships
+    };
+
+    document.getElementById('jsonPreview').textContent = JSON.stringify(payload, null, 2);
+
+    fetch('#', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      if(!res.ok) throw new Error('Server-Antwort: ' + res.status);
+      return res.text();
+    })
+    .then(text => {
+      alertEl.innerHTML = '<div class="alert alert-success mb-0 p-2">Payload erfolgreich gesendet.</div>';
+      console.log('Server response:', text);
+    })
+    .catch(err => {
+      alertEl.innerHTML = '<div class="alert alert-warning mb-0 p-2">Senden fehlgeschlagen: ' + esc(err.message) + '</div>';
+      console.error(err);
+    });
+  });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
 </body>
