@@ -73,7 +73,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary disabled">
+                        <a href="${person.url ? 'detail.html?id=' + encodeURIComponent(person.url.match(/\/(\d+)\/?$/)[1]) : '#'}" class="btn btn-sm btn-primary">
                             Details
                         </a>
                     </td>

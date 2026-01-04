@@ -99,7 +99,8 @@
         const homeworldTd = '<td>' + (p.homeworld
           ? '<a href="' + homeworldHref + '" target="_blank" rel="noopener">Homeworld</a>'
           : '<span class="text-muted">—</span>') + '</td>';
-        const detailsTd = '<td><a class="btn btn-sm btn-outline-secondary disabled" href="#" role="button" aria-disabled="true">Details</a></td>';
+        const link = p.url ? 'detail.html?id=' + encodeURIComponent(p.url.match(/\/(\d+)\/?$/)[1]) : '#';
+        const detailsTd = '<td><a class="btn btn-sm btn-outline-secondary " href=" ' + link + '" role="button" aria-disabled="true">Details</a></td>';
 
         tr.innerHTML = nameTd + heightTd + birthTd + homeworldTd + detailsTd;
         tbody.appendChild(tr);
