@@ -87,24 +87,37 @@
             </select>
           </div>
 
+          <!-- Films: multi-select -->
           <div class="col-12 col-md-6">
-            <label class="form-label">Films (eine URL pro Zeile)</label>
-            <textarea class="form-control" id="films" rows="4" placeholder="https://swapi.info/api/films/1"></textarea>
+            <label class="form-label">Films (mehrfach auswählbar)</label>
+            <select class="form-select" id="films" multiple size="6" aria-label="Filme wählen">
+              <option value="">Lade Filme…</option>
+            </select>
+            <div class="form-text">Halten Sie Strg/Cmd gedrückt, um mehrere auszuwählen.</div>
           </div>
 
+          <!-- Species: multi-select -->
           <div class="col-12 col-md-6">
-            <label class="form-label">Species (eine URL pro Zeile)</label>
-            <textarea class="form-control" id="species" rows="4" placeholder="https://swapi.info/api/species/1"></textarea>
+            <label class="form-label">Species (mehrfach auswählbar)</label>
+            <select class="form-select" id="species" multiple size="6" aria-label="Species wählen">
+              <option value="">Lade Species…</option>
+            </select>
           </div>
 
+          <!-- Vehicles: multi-select -->
           <div class="col-12 col-md-6">
-            <label class="form-label">Vehicles (eine URL pro Zeile)</label>
-            <textarea class="form-control" id="vehicles" rows="3" placeholder="https://swapi.info/api/vehicles/14"></textarea>
+            <label class="form-label">Vehicles (mehrfach auswählbar)</label>
+            <select class="form-select" id="vehicles" multiple size="6" aria-label="Vehicles wählen">
+              <option value="">Lade Vehicles…</option>
+            </select>
           </div>
 
+          <!-- Starships: multi-select -->
           <div class="col-12 col-md-6">
-            <label class="form-label">Starships (eine URL pro Zeile)</label>
-            <textarea class="form-control" id="starships" rows="3" placeholder="https://swapi.info/api/starships/12"></textarea>
+            <label class="form-label">Starships (mehrfach auswählbar)</label>
+            <select class="form-select" id="starships" multiple size="6" aria-label="Starships wählen">
+              <option value="">Lade Starships…</option>
+            </select>
           </div>
         </div>
 
@@ -126,23 +139,56 @@
   </div>
 </div>
 
-<!-- Script: Formhandling + Planeten-Select befüllen -->
+<!-- Script: Formhandling + Selects befüllen -->
 <script>
   function esc(s){ return String(s===null||s===undefined?'':s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
   function splitLinesToArray(text){ return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean); }
+  function getSelectedValues(id){
+    const sel = document.getElementById(id);
+    if(!sel) return [];
+    return Array.from(sel.selectedOptions).map(o => o.value).filter(Boolean);
+  }
 
-  // Planeten laden und Select füllen
+  // generischer Loader für Listen-Selects (url, selectId, labelKey: 'name' oder 'title')
+  function loadListToSelect(apiUrl, selectId, labelKey){
+    const sel = document.getElementById(selectId);
+    if(!sel) return;
+    sel.innerHTML = '<option value="">Lade…</option>';
+    fetch(apiUrl)
+      .then(res => {
+        if(!res.ok) throw new Error('Netzwerkfehler: ' + res.status);
+        return res.json();
+      })
+      .then(json => {
+        const items = Array.isArray(json) ? json : (json.results || json);
+        if(!Array.isArray(items) || items.length === 0){
+          sel.innerHTML = '<option value="">Keine Einträge</option>';
+          return;
+        }
+        const opts = ['<option value="">-- auswählen --</option>'];
+        for(const it of items){
+          const label = esc(it[labelKey] || it.name || it.title || 'unbekannt');
+          const url = esc(it.url || '');
+          opts.push('<option value="'+url+'">'+label+'</option>');
+        }
+        sel.innerHTML = opts.join('');
+      })
+      .catch(err => {
+        console.error(err);
+        sel.innerHTML = '<option value="">Fehler beim Laden</option>';
+      });
+  }
+
+  // Bestehender Planeten-Loader (bleibt)
   (function loadPlanets(){
     const sel = document.getElementById('homeworld');
     if(!sel) return;
-    // Ziel: fetch dann json als Array verarbeiten
     fetch("https://swapi.info/api/planets")
       .then(res => {
         if(!res.ok) throw new Error('Netzwerkfehler beim Laden der Planeten: ' + res.status);
         return res.json();
       })
       .then(json => {
-        // API kann direkt ein Array oder ein Objekt mit results liefern
         const planets = Array.isArray(json) ? json : (json.results || json);
         if(!Array.isArray(planets) || planets.length === 0){
           sel.innerHTML = '<option value="">Keine Planeten gefunden</option>';
@@ -162,6 +208,12 @@
       });
   })();
 
+  // Loaders für Films, Species, Vehicles, Starships
+  loadListToSelect('https://swapi.info/api/films', 'films', 'title');
+  loadListToSelect('https://swapi.info/api/species', 'species', 'name');
+  loadListToSelect('https://swapi.info/api/vehicles', 'vehicles', 'name');
+  loadListToSelect('https://swapi.info/api/starships', 'starships', 'name');
+
   document.getElementById('charForm').addEventListener('submit', function(e){
     e.preventDefault();
     const alertEl = document.getElementById('formAlert');
@@ -175,11 +227,12 @@
     const eye_color = document.getElementById('eye_color').value;
     const birth_year = document.getElementById('birth_year').value.trim();
     const gender = document.getElementById('gender').value;
-    const homeworld = document.getElementById('homeworld').value.trim(); // hier kommt die URL
-    const films = splitLinesToArray(document.getElementById('films').value);
-    const species = splitLinesToArray(document.getElementById('species').value);
-    const vehicles = splitLinesToArray(document.getElementById('vehicles').value);
-    const starships = splitLinesToArray(document.getElementById('starships').value);
+    const homeworld = document.getElementById('homeworld').value.trim(); // URL
+    // neu: Mehrfachauswahl aus selects
+    const films = getSelectedValues('films');
+    const species = getSelectedValues('species');
+    const vehicles = getSelectedValues('vehicles');
+    const starships = getSelectedValues('starships');
 
     const errors = [];
     if(!name) errors.push('Name ist erforderlich.');
