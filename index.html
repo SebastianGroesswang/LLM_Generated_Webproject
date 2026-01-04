@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Star Wars Character Selektor</title>
+  <style>
+    /* Graues Theme, zentrierter Container, responsive Typografie */
+    :root{
+      --bg:#f2f3f5;
+      --card:#eceef0;
+      --muted:#6b7280;
+      --accent:#bfc3c7;
+      --text:#111827;
+      --max-width:1000px;
+    }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{background:linear-gradient(180deg,var(--bg),#eef0f2);color:var(--text);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:var(--max-width);margin:32px auto;padding:20px;box-sizing:border-box;}
+    header.card{
+      background:linear-gradient(180deg,#ececec,#e6e7e9);
+      padding:28px;border-radius:12px;border:1px solid var(--accent);
+      box-shadow:0 6px 18px rgba(16,24,40,0.06);
+    }
+    header h1{margin:0;font-size:clamp(1.4rem,2.4vw,2.2rem);letter-spacing:-0.02em;}
+    .lead{
+      margin-top:12px;color:var(--muted);font-size:clamp(0.95rem,1.6vw,1.05rem);
+    }
+
+    main{margin-top:18px;display:grid;gap:16px;}
+    section.card{
+      background:#fff;padding:18px;border-radius:10px;border:1px solid var(--accent);
+      box-shadow:0 4px 12px rgba(15,23,42,0.04);
+    }
+    section h2{margin:0 0 8px 0;font-size:1.05rem;}
+    section p{margin:0;color:var(--muted);line-height:1.5;font-size:0.98rem;}
+
+    /* Responsive adjustments */
+    @media (max-width:520px){
+      .wrap{padding:14px;margin:20px;}
+      header.card{padding:20px;}
+      section.card{padding:14px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="card" role="banner" aria-labelledby="site-title">
+      <h1 id="site-title">Star Wars Character Selektor</h1>
+      <p class="lead">Kurze Einführung und Zweck der Seite (Platzhalter).</p>
+    </header>
+
+    <main>
+      <section class="card" aria-labelledby="description-title">
+        <h2 id="description-title">Beschreibung der Seite</h2>
+        <p>Hier steht eine allgemeine Beschreibung dieser Seite. Inhalt ist aktuell als Platzhalter vorgesehen und kann später durch echte Informationen ersetzt werden.</p>
+      </section>
+
+      <section class="card" aria-labelledby="llm-title">
+        <h2 id="llm-title">Verwendung von LLMs in diesem Projekt</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
