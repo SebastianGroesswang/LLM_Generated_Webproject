@@ -65,6 +65,7 @@
 
             data.forEach(person => {
                 const row = document.createElement('tr');
+                const link = person.url ? 'detail.html?id=' + encodeURIComponent(person.url.match(/\/(\d+)\/?$/)[1]) : '#';
 
                 row.innerHTML = `
                         <td>${person.name}</td>
@@ -74,7 +75,7 @@
                             <a href="${person.homeworld}" target="_blank" class="btn btn-sm btn-outline-secondary">Link zur Welt</a>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-primary disabled">Details</a>
+                            <a class="btn btn-sm btn-outline-secondary " href="${link}" role="button">Details</a>
                         </td>
                     `;
 
