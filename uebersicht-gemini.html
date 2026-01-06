@@ -7,7 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f2f3f5; }
-        .navbar-brand img { height: 40px; } /* Größe des Logos anpassen */
+        .navbar-brand img { height: 40px; }
+        .table-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -17,11 +18,9 @@
         <a class="navbar-brand" href="#">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg" alt="Star Wars Logo">
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -34,8 +33,62 @@
 
 <div class="container py-5">
     <h1>Übersicht Copilot</h1>
-    <p>Willkommen auf der Copilot-Übersichtsseite.</p>
+
+    <div class="table-container mt-4">
+        <table class="table table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Größe (cm)</th>
+                <th>Geburtsjahr</th>
+                <th>Heimatwelt</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody id="characters-table">
+            <tr>
+                <td colspan="5" class="text-center">Daten werden geladen...</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    async function fetchCharacters() {
+        try {
+            const response = await fetch('https://swapi.info/api/people');
+            const data = await response.json();
+
+            const tableBody = document.getElementById('characters-table');
+            tableBody.innerHTML = ''; // Lade-Text entfernen
+
+            data.forEach(person => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                        <td>${person.name}</td>
+                        <td>${person.height}</td>
+                        <td>${person.birth_year}</td>
+                        <td>
+                            <a href="${person.homeworld}" target="_blank" class="btn btn-sm btn-outline-secondary">Link zur Welt</a>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-primary disabled">Details</a>
+                        </td>
+                    `;
+
+                tableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+            document.getElementById('characters-table').innerHTML = '<tr><td colspan="5" class="text-danger">Fehler beim Laden der Daten.</td></tr>';
+        }
+    }
+
+    // Funktion beim Laden der Seite ausführen
+    fetchCharacters();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
