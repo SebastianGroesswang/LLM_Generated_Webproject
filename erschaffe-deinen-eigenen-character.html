@@ -262,18 +262,21 @@
 
     document.getElementById('jsonPreview').textContent = JSON.stringify(payload, null, 2);
 
-    fetch('#', {
+    // vorheriger fetch('#', { ... })
+    fetch('https://httpbin.org/post', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
     .then(res => {
       if(!res.ok) throw new Error('Server-Antwort: ' + res.status);
-      return res.text();
+      return res.json(); // JSON-Antwort von httpbin parsen
     })
-    .then(text => {
-      alertEl.innerHTML = '<div class="alert alert-success mb-0 p-2">Payload erfolgreich gesendet.</div>';
-      console.log('Server response:', text);
+    .then(json => {
+      // Antwort in Preview anzeigen und Erfolg melden
+      document.getElementById('jsonPreview').textContent = JSON.stringify(json, null, 2);
+      alertEl.innerHTML = '<div class="alert alert-success mb-0 p-2">Payload erfolgreich an https://httpbin.org/post gesendet.</div>';
+      console.log('Server response (json):', json);
     })
     .catch(err => {
       alertEl.innerHTML = '<div class="alert alert-warning mb-0 p-2">Senden fehlgeschlagen: ' + esc(err.message) + '</div>';
